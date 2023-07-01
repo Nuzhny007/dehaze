@@ -53,7 +53,6 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
 
     int iteration = 0;
     while (true) {
-
         // order
         std::sort(result.begin(), result.end(), [](const Tuple<dim>& a, const Tuple<dim>& b) -> bool {
             return (std::get<1>(a) < std::get<1>(b));
@@ -63,6 +62,7 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
 
         // break after max_iter
         if (max_iter && iteration >= max_iter) {
+            std::cout << "max_iter: " << iteration << std::endl;
             return std::get<0>(result[0]);
         }
 
@@ -80,6 +80,8 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         }
 
         if (no_improv >= no_improv_break) {
+            std::cout << "no improve: " << iteration << std::endl;
+
             return std::get<0>(result[0]);
         }
 
@@ -143,7 +145,6 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
 
         result.clear();
         result.insert(result.end(), reduct_result.begin(), reduct_result.end());
-
     }
 
 }

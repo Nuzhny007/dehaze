@@ -150,6 +150,7 @@ double tmap(cv::Vec<double, 1> x, cv::Mat& patch, cv::Scalar a, int patch_size, 
 	}
 
 	res = res == 0.0 ? 0.00000001 : res;
+	
 	return -res;
 }
 
@@ -173,13 +174,15 @@ cv::Mat tmap_optimal(cv::Mat& patches, cv::Scalar a, int patch_size, int max_ite
 		
 		cv::Vec<double, 1> xmin(1-min_val);
 		auto tmap_binded = bind(tmap, _1, i, a, patch_size, sheped_gauss);
+
 		auto res = Nelder_Mead_Optimizer<decltype(tmap_binded), 1>(tmap_binded, xmin, 1);
+		
 
 		if (log) {
 			std::cout << patch << ": " << xmin[0] << std::endl;
 		}
 		
-		t_opt.at<double>(0, patch) = xmin[0];
+		t_opt.at<double>(0, patch) = res[0];
 
 	}
 
