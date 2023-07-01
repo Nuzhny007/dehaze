@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
 
-	cv::Mat img = cv::imread("hazy_scene.png", cv::IMREAD_COLOR);
+	cv::Mat img = cv::imread("images/hazy_scene.png", cv::IMREAD_COLOR);
 	cv::Mat dehazed = dehaze(img);
 
 	cv::imshow("source", img);

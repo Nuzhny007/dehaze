@@ -16,7 +16,7 @@ cv::Mat dehaze(const cv::Mat& img, int patch_size, int max_iter, double eps, int
 	cv::Mat tmap = tmap_optimal(i, a_s, patch_size, max_iter, eps, log);
 	//Удаление блочных артефактов с карты пропускания
 	tmap = cv::repeat(tmap, patch_size * patch_size, 1);
-	tmap = col2im<double>(tmap, patch_size, patch_size, ceil(img.cols / (double)patch_size), ceil(img.rows / (double)patch_size));
+	tmap = col2im<double>(tmap, patch_size, patch_size, ceil((double)img.cols / patch_size), ceil((double)img.rows / patch_size));
 	tmap = tmap(cv::Range(0, img.rows), cv::Range(0, img.cols));
 	tmap = guided_filter(gray, tmap, 30, 1e-4);
 
@@ -25,7 +25,10 @@ cv::Mat dehaze(const cv::Mat& img, int patch_size, int max_iter, double eps, int
 	cv::Mat dimg = toDuble(img);
 	cv::Mat temp;
 	cv::pow(cv::max(tmap, tmin), dp, temp);
-	cv::Mat res = (dimg - adapt_light) / temp + adapt_light;
+	cv::Mat res = (dimg - adapt_light);
+	std::vector<cv::Mat> temp_3ch = { temp, temp, temp };
+	cv::merge(temp_3ch, temp);
+	res = res / temp + adapt_light;
 
 	cv::threshold(res, res, 0.0, 0.0, cv::THRESH_TOZERO);
 	cv::threshold(res, res, 1.0, 1.0, cv::THRESH_TRUNC);
