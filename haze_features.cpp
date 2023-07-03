@@ -6,7 +6,7 @@
 #include "atm_light.h"
 #include "minimizer.h"
 
-/* Приводит ядро к нужному виду для свёртки
+/* РџСЂРёРІРѕРґРёС‚ СЏРґСЂРѕ Рє РЅСѓР¶РЅРѕРјСѓ РІРёРґСѓ РґР»СЏ СЃРІС‘СЂС‚РєРё
 */
 cv::Point prepareKernel(const cv::Mat& kernel_in, cv::Mat& kernel_out) {
 	cv::flip(kernel_in, kernel_out, -1);
@@ -16,12 +16,12 @@ cv::Point prepareKernel(const cv::Mat& kernel_in, cv::Mat& kernel_out) {
 }
 
 
-/* Функция, рассчитывает контрастную энергию для конкретного канала
-@param image_clr входной канал
-@param out_ce_clr выходная контрастная энергия
-@param sigma средне квадратичное отклонение в фильтре гаусса
-@param t пороговое значения для подавления шума
-@param k коэффициент насыщения (semisaturatoin ?)
+/* Р¤СѓРЅРєС†РёСЏ, СЂР°СЃСЃС‡РёС‚С‹РІР°РµС‚ РєРѕРЅС‚СЂР°СЃС‚РЅСѓСЋ СЌРЅРµСЂРіРёСЋ РґР»СЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ РєР°РЅР°Р»Р°
+@param image_clr РІС…РѕРґРЅРѕР№ РєР°РЅР°Р»
+@param out_ce_clr РІС‹С…РѕРґРЅР°СЏ РєРѕРЅС‚СЂР°СЃС‚РЅР°СЏ СЌРЅРµСЂРіРёСЏ
+@param sigma СЃСЂРµРґРЅРµ РєРІР°РґСЂР°С‚РёС‡РЅРѕРµ РѕС‚РєР»РѕРЅРµРЅРёРµ РІ С„РёР»СЊС‚СЂРµ РіР°СѓСЃСЃР°
+@param t РїРѕСЂРѕРіРѕРІРѕРµ Р·РЅР°С‡РµРЅРёСЏ РґР»СЏ РїРѕРґР°РІР»РµРЅРёСЏ С€СѓРјР°
+@param k РєРѕСЌС„С„РёС†РёРµРЅС‚ РЅР°СЃС‹С‰РµРЅРёСЏ (semisaturatoin ?)
 */
 void channelContrastEnergy(const cv::Mat& image_clr, cv::Mat& out_ce_clr, double sigma, double t, double k) {
 	const int border_size = 20;
@@ -43,18 +43,18 @@ void channelContrastEnergy(const cv::Mat& image_clr, cv::Mat& out_ce_clr, double
 	cv::Mat z = remove_border(z_bordered, border_size);
 
 	double z_max{};
-	cv::minMaxIdx(z, NULL, &z_max);
+    cv::minMaxIdx(z, nullptr, &z_max);
 
 	cv::Mat ce_clr_temp = (z_max * z) / (z + z_max * k) - t;
-	cv::threshold(ce_clr_temp, out_ce_clr, 0.0000001, NULL, cv::THRESH_TOZERO);
+    cv::threshold(ce_clr_temp, out_ce_clr, 0.0000001, 0, cv::THRESH_TOZERO);
 
 }
 
-// Функция, рассчитывает контрастную энергию для трёх цветовых каналов изображения
+// Р¤СѓРЅРєС†РёСЏ, СЂР°СЃСЃС‡РёС‚С‹РІР°РµС‚ РєРѕРЅС‚СЂР°СЃС‚РЅСѓСЋ СЌРЅРµСЂРіРёСЋ РґР»СЏ С‚СЂС‘С… С†РІРµС‚РѕРІС‹С… РєР°РЅР°Р»РѕРІ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 std::vector<cv::Mat> contrastEnergy(const cv::Mat& image_in) {
 	assert(image_in.channels() == 3 && "not bgr image");
 
-	const double sigma = 3.25; //средне квадратичное отклонение в фильтре гаусса
+	const double sigma = 3.25; //СЃСЂРµРґРЅРµ РєРІР°РґСЂР°С‚РёС‡РЅРѕРµ РѕС‚РєР»РѕРЅРµРЅРёРµ РІ С„РёР»СЊС‚СЂРµ РіР°СѓСЃСЃР°
 	const double k = 0.1;
 	const double t_gray = 9.225496406318721e-4 * 255;
 	const double t_by = 8.969246659629488e-4 * 255;
@@ -80,7 +80,7 @@ std::vector<cv::Mat> contrastEnergy(const cv::Mat& image_in) {
 	return out_ce;
 }
 
-// рассчитывает энтропию изображения, принимает серый канал изображения
+// СЂР°СЃСЃС‡РёС‚С‹РІР°РµС‚ СЌРЅС‚СЂРѕРїРёСЋ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ, РїСЂРёРЅРёРјР°РµС‚ СЃРµСЂС‹Р№ РєР°РЅР°Р» РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 double imageEntropy(const cv::Mat& gray, int patch_size) {
 	assert(gray.channels() == 1 && "not gray image");
 
@@ -97,7 +97,7 @@ double imageEntropy(const cv::Mat& gray, int patch_size) {
 	return -entropy;
 }
 
-// считает стандартное отклонение
+// СЃС‡РёС‚Р°РµС‚ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРµ РѕС‚РєР»РѕРЅРµРЅРёРµ
 double stdDeviation(const cv::Mat& gray, const cv::Mat& gaussKernel, double mu) {
 	assert(gray.channels() == 1 && "not gray image");
 
@@ -109,12 +109,12 @@ double stdDeviation(const cv::Mat& gray, const cv::Mat& gaussKernel, double mu) 
 	return cv::sum(temp)[0];
 }
 
-// считает нормализованную дисперсию
+// СЃС‡РёС‚Р°РµС‚ РЅРѕСЂРјР°Р»РёР·РѕРІР°РЅРЅСѓСЋ РґРёСЃРїРµСЂСЃРёСЋ
 double normDisp(double std, double mu) {
 	return std / (mu);
 }
 
-// Количественная оценка дымки в локальном участке изображения
+// РљРѕР»РёС‡РµСЃС‚РІРµРЅРЅР°СЏ РѕС†РµРЅРєР° РґС‹РјРєРё РІ Р»РѕРєР°Р»СЊРЅРѕРј СѓС‡Р°СЃС‚РєРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 double tmap(cv::Vec<double, 1> x, cv::Mat& patch, cv::Scalar a, int patch_size, cv::Mat& gaussianKernel) {
 	double t = x[0];
 
@@ -154,7 +154,7 @@ double tmap(cv::Vec<double, 1> x, cv::Mat& patch, cv::Scalar a, int patch_size, 
 	return -res;
 }
 
-// Поиск оптимальной карты пропускания
+// РџРѕРёСЃРє РѕРїС‚РёРјР°Р»СЊРЅРѕР№ РєР°СЂС‚С‹ РїСЂРѕРїСѓСЃРєР°РЅРёСЏ
 using namespace std::placeholders;
 cv::Mat tmap_optimal(cv::Mat& patches, cv::Scalar a, int patch_size, int max_iter, double eps, bool log) {
 	cv::Mat t_opt = cv::Mat::zeros(1, patches.cols, CV_64F);

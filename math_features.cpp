@@ -8,7 +8,7 @@
 std::vector<double> gaussianKernel(double sigma) {
 	const int break_of_sigma = 3;
 	const double step = 1.0;
-	//инициализация сетки и гауссовского распределения
+	//РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРµС‚РєРё Рё РіР°СѓСЃСЃРѕРІСЃРєРѕРіРѕ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ
 	double filter_size = break_of_sigma * sigma;
 	std::vector<double> grid_x{};
 	std::vector<double> gauss_dist{};
@@ -19,11 +19,11 @@ std::vector<double> gaussianKernel(double sigma) {
 		x_current += step;
 	}
 
-	//Нормализация?
+	//РќРѕСЂРјР°Р»РёР·Р°С†РёСЏ?
 	double sum_tmp = std::reduce(gauss_dist.begin(), gauss_dist.end());
 	std::for_each(gauss_dist.begin(), gauss_dist.end(), [=](double& x) {x /= sum_tmp;});
 
-	//Вычисление оператора марра (ядро гауссового фильтра?)
+	//Р’С‹С‡РёСЃР»РµРЅРёРµ РѕРїРµСЂР°С‚РѕСЂР° РјР°СЂСЂР° (СЏРґСЂРѕ РіР°СѓСЃСЃРѕРІРѕРіРѕ С„РёР»СЊС‚СЂР°?)
 	std::vector<double> kernel{};
 	for (int i = 0; i < grid_x.size(); i++) {
 		kernel.push_back(marra(grid_x[i], sigma) * gauss_dist[i]);

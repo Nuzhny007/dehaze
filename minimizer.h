@@ -86,7 +86,7 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         }
 
         //centroid
-        Vector<dim> centroid_pt = cv::Vec<double, dim>::zeros();
+        Vector<dim> centroid_pt = Vector<dim>::all(0);
         for (auto it_pt = result.begin(); it_pt != (result.end() - 1); it_pt++) {
             centroid_pt += std::get<0>(*it_pt);
         }

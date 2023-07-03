@@ -3,9 +3,9 @@
 #include <iostream>
 
 
-/* Симметричные отсупы
-* @param img входное изображение
-* @param size величина отсупа
+/* РЎРёРјРјРµС‚СЂРёС‡РЅС‹Рµ РѕС‚СЃСѓРїС‹
+* @param img РІС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param size РІРµР»РёС‡РёРЅР° РѕС‚СЃСѓРїР°
 */
 cv::Mat sympad(const cv::Mat& img, int size) {
 	std::vector<cv::Mat> channels;
@@ -36,9 +36,9 @@ cv::Mat sympad(const cv::Mat& img, int size) {
 	return padded_img;
 }
 
-/* Фильтр. На заданном радиусе выбирает пиксель с миниальной яркостью и заменяет им все остальные
-* @param padded_img входное изображение с отступами
-* @param size радиус
+/* Р¤РёР»СЊС‚СЂ. РќР° Р·Р°РґР°РЅРЅРѕРј СЂР°РґРёСѓСЃРµ РІС‹Р±РёСЂР°РµС‚ РїРёРєСЃРµР»СЊ СЃ РјРёРЅРёР°Р»СЊРЅРѕР№ СЏСЂРєРѕСЃС‚СЊСЋ Рё Р·Р°РјРµРЅСЏРµС‚ РёРј РІСЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ
+* @param padded_img РІС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ СЃ РѕС‚СЃС‚СѓРїР°РјРё
+* @param size СЂР°РґРёСѓСЃ
 */
 template<typename T>
 void custom_filt(const cv::Mat& padded_img, cv::Mat& out_img, int size) {
@@ -62,7 +62,7 @@ void custom_filt(const cv::Mat& padded_img, cv::Mat& out_img, int size) {
 	cv::merge(out_channels, out_img);
 }
 
-// Минимальный фильтр. Уменьшает интенсивность белых объектов.
+// РњРёРЅРёРјР°Р»СЊРЅС‹Р№ С„РёР»СЊС‚СЂ. РЈРјРµРЅСЊС€Р°РµС‚ РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РµР»С‹С… РѕР±СЉРµРєС‚РѕРІ.
 void min_filter(const cv::Mat& img, cv::Mat& out_img, int size = 5) {
 	int padsize = (size - 1) / 2;
 	cv::Mat padded_img = sympad(img, size);

@@ -5,18 +5,18 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-/* Вычисляет точку атмосферного света методом QuadTree division. BGR изображение
-* @param img входное изображение
-* @param stopdiv_size относительные размер конечного участка
-* @param minfilt_size радиус действий минимального фильтра
+/* Р’С‹С‡РёСЃР»СЏРµС‚ С‚РѕС‡РєСѓ Р°С‚РјРѕСЃС„РµСЂРЅРѕРіРѕ СЃРІРµС‚Р° РјРµС‚РѕРґРѕРј QuadTree division. BGR РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param img РІС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param stopdiv_size РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ СЂР°Р·РјРµСЂ РєРѕРЅРµС‡РЅРѕРіРѕ СѓС‡Р°СЃС‚РєР°
+* @param minfilt_size СЂР°РґРёСѓСЃ РґРµР№СЃС‚РІРёР№ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ С„РёР»СЊС‚СЂР°
 */
 cv::Vec3b get_atm_light(const cv::Mat& img, double stopdiv_size = 0.2, int minfilt_size = 5);
 
-/* Адаптивный атмосферный свет
-* @param tmap карта пропускания
-* @param img входное BGR изображение
-* @param gray входное серое изображение
-* @param atm_light коордианата атмосферного света
-* @param lambda коэффициент
+/* РђРґР°РїС‚РёРІРЅС‹Р№ Р°С‚РјРѕСЃС„РµСЂРЅС‹Р№ СЃРІРµС‚
+* @param tmap РєР°СЂС‚Р° РїСЂРѕРїСѓСЃРєР°РЅРёСЏ
+* @param img РІС…РѕРґРЅРѕРµ BGR РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param gray РІС…РѕРґРЅРѕРµ СЃРµСЂРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param atm_light РєРѕРѕСЂРґРёР°РЅР°С‚Р° Р°С‚РјРѕСЃС„РµСЂРЅРѕРіРѕ СЃРІРµС‚Р°
+* @param lambda РєРѕСЌС„С„РёС†РёРµРЅС‚
 */
 cv::Mat adaptive_atm_light(const cv::Mat& tmap, const cv::Mat& img, const cv::Mat& gray, cv::Scalar atm_light, int lambda);

@@ -2,11 +2,11 @@
 #include "filtering.hpp"
 #include "utils.h"
 
-/* Делит изображение на 4 региона и выбирает тот, у кого больше средняя яркость
-* @param img входное изображение
-* @param chosen_reg выбранный регион
-* @param x0 коордианата верхнего левого угла выбранного региона
-* @param y0 коордианата верхнего левого угла выбранного региона
+/* Р”РµР»РёС‚ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РЅР° 4 СЂРµРіРёРѕРЅР° Рё РІС‹Р±РёСЂР°РµС‚ С‚РѕС‚, Сѓ РєРѕРіРѕ Р±РѕР»СЊС€Рµ СЃСЂРµРґРЅСЏСЏ СЏСЂРєРѕСЃС‚СЊ
+* @param img РІС…РѕРґРЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+* @param chosen_reg РІС‹Р±СЂР°РЅРЅС‹Р№ СЂРµРіРёРѕРЅ
+* @param x0 РєРѕРѕСЂРґРёР°РЅР°С‚Р° РІРµСЂС…РЅРµРіРѕ Р»РµРІРѕРіРѕ СѓРіР»Р° РІС‹Р±СЂР°РЅРЅРѕРіРѕ СЂРµРіРёРѕРЅР°
+* @param y0 РєРѕРѕСЂРґРёР°РЅР°С‚Р° РІРµСЂС…РЅРµРіРѕ Р»РµРІРѕРіРѕ СѓРіР»Р° РІС‹Р±СЂР°РЅРЅРѕРіРѕ СЂРµРіРёРѕРЅР°
 */
 void qtdiv(const cv::Mat& img, cv::Mat& chosen_reg, int& x0, int& y0) {
 	int height = img.rows;
@@ -35,7 +35,7 @@ void qtdiv(const cv::Mat& img, cv::Mat& chosen_reg, int& x0, int& y0) {
 	y0 = y0 + offset_y * (height / 2);
 }
 
-// Вычисляет точку атмосферного света методом QuadTree division
+// Р’С‹С‡РёСЃР»СЏРµС‚ С‚РѕС‡РєСѓ Р°С‚РјРѕСЃС„РµСЂРЅРѕРіРѕ СЃРІРµС‚Р° РјРµС‚РѕРґРѕРј QuadTree division
 cv::Vec3b get_atm_light(const cv::Mat& img, double stopdiv_size, int minfilt_size) {
 	assert(img.channels() == 3 && "not bgr picture");
 
@@ -52,7 +52,7 @@ cv::Vec3b get_atm_light(const cv::Mat& img, double stopdiv_size, int minfilt_siz
 		div_height = gray_img.rows;
 		div_width = gray_img.cols;
 	}
-	// Участок изображения с максимальной яркостью атмосферного света
+	// РЈС‡Р°СЃС‚РѕРє РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ СЏСЂРєРѕСЃС‚СЊСЋ Р°С‚РјРѕСЃС„РµСЂРЅРѕРіРѕ СЃРІРµС‚Р°
 	cv::Mat chosen_reg = img(cv::Range(y0, y0 + div_height), cv::Range(x0, x0 + div_width));
 	cv::Mat deviation = white_deviation(chosen_reg);
 	cv::Point atm_light;
@@ -62,7 +62,7 @@ cv::Vec3b get_atm_light(const cv::Mat& img, double stopdiv_size, int minfilt_siz
 	return res;
 }
 
-//Адаптивный атмосферный свет
+//РђРґР°РїС‚РёРІРЅС‹Р№ Р°С‚РјРѕСЃС„РµСЂРЅС‹Р№ СЃРІРµС‚
 cv::Mat adaptive_atm_light(const cv::Mat& tmap, const cv::Mat& img, const cv::Mat& gray, cv::Scalar atm_light, int lambda) {
 	atm_light = atm_light / 255;
 	cv::Mat beta = 1 / (tmap - 1);

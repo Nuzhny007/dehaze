@@ -1,6 +1,6 @@
 #include "utils.h"
 
-//Создаёт барьер из граничных участков изображения
+//РЎРѕР·РґР°С‘С‚ Р±Р°СЂСЊРµСЂ РёР· РіСЂР°РЅРёС‡РЅС‹С… СѓС‡Р°СЃС‚РєРѕРІ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 cv::Mat make_border(const cv::Mat& image, int border_size) {
 	int size_top = border_size / 2;
 	int size_bottom{};
@@ -26,7 +26,7 @@ cv::Mat make_border(const cv::Mat& image, int border_size) {
 	return bordered_matx;
 }
 
-// Убирает границы барьера
+// РЈР±РёСЂР°РµС‚ РіСЂР°РЅРёС†С‹ Р±Р°СЂСЊРµСЂР°
 cv::Mat remove_border(const cv::Mat& image, int border_size) {
 	int size_top = border_size / 2;
 	int size_bottom{};
@@ -43,7 +43,7 @@ cv::Mat remove_border(const cv::Mat& image, int border_size) {
 	return center_matx;
 }
 
-// Создаёт гистограмму распределения одного цветового канала
+// РЎРѕР·РґР°С‘С‚ РіРёСЃС‚РѕРіСЂР°РјРјСѓ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ РѕРґРЅРѕРіРѕ С†РІРµС‚РѕРІРѕРіРѕ РєР°РЅР°Р»Р°
 void calc_cnl_hist(const cv::Mat& cnl, cv::Mat& hist) {
 	int ch[] = { 0 };
 	int histSize[] = { 256 };
@@ -52,7 +52,7 @@ void calc_cnl_hist(const cv::Mat& cnl, cv::Mat& hist) {
 	cv::calcHist(&cnl, 1, ch, cv::noArray(), hist, 1, histSize, ranges, true);
 }
 
-// Считает отклонение от белого для каждого пикселя изображения, как евкликдову норму
+// РЎС‡РёС‚Р°РµС‚ РѕС‚РєР»РѕРЅРµРЅРёРµ РѕС‚ Р±РµР»РѕРіРѕ РґР»СЏ РєР°Р¶РґРѕРіРѕ РїРёРєСЃРµР»СЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ, РєР°Рє РµРІРєР»РёРєРґРѕРІСѓ РЅРѕСЂРјСѓ
 cv::Mat white_deviation(const cv::Mat& img) {
 	cv::Mat deviation = cv::Mat::zeros(img.rows, img.cols, CV_64F);
 	cv::Mat conv_img;
@@ -69,7 +69,7 @@ cv::Mat white_deviation(const cv::Mat& img) {
 	return deviation;
 }
 
-//Куммулятивная сумма значений пикселей входного изображение
+//РљСѓРјРјСѓР»СЏС‚РёРІРЅР°СЏ СЃСѓРјРјР° Р·РЅР°С‡РµРЅРёР№ РїРёРєСЃРµР»РµР№ РІС…РѕРґРЅРѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 void cumsum(const cv::Mat& img, cv::Mat& out, int dim) {
 
 	if (dim == 1) {
@@ -91,7 +91,7 @@ void cumsum(const cv::Mat& img, cv::Mat& out, int dim) {
 	
 }
 
-// Приводит bgr значения к диапазону[0, 1]
+// РџСЂРёРІРѕРґРёС‚ bgr Р·РЅР°С‡РµРЅРёСЏ Рє РґРёР°РїР°Р·РѕРЅСѓ[0, 1]
 cv::Mat toDuble(const cv::Mat& img) {
 	cv::Mat temp;
 	img.convertTo(temp, CV_64F);

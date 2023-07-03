@@ -1,7 +1,7 @@
 #include "dehaze.h"
 #include <ctime>
 
-// Алгоритм удаления дымки с BGR изображения
+// РђР»РіРѕСЂРёС‚Рј СѓРґР°Р»РµРЅРёСЏ РґС‹РјРєРё СЃ BGR РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 cv::Mat dehaze(const cv::Mat& img, int patch_size, int max_iter, double eps, int lambda,
 			   double tmin, double dp, bool log) {
 	assert(img.channels() == 3 && "not bgr picture");
@@ -17,7 +17,7 @@ cv::Mat dehaze(const cv::Mat& img, int patch_size, int max_iter, double eps, int
 	cv::Mat tmap = tmap_optimal(i, a_s, patch_size, max_iter, eps, log);
 
 
-	//Удаление блочных артефактов с карты пропускания
+	//РЈРґР°Р»РµРЅРёРµ Р±Р»РѕС‡РЅС‹С… Р°СЂС‚РµС„Р°РєС‚РѕРІ СЃ РєР°СЂС‚С‹ РїСЂРѕРїСѓСЃРєР°РЅРёСЏ
 	tmap = cv::repeat(tmap, patch_size * patch_size, 1);
 	tmap = col2im<double>(tmap, patch_size, patch_size, ceil((double)img.cols / patch_size), ceil((double)img.rows / patch_size));
 	tmap = tmap(cv::Range(0, img.rows), cv::Range(0, img.cols));
