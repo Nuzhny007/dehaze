@@ -80,7 +80,7 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         }
 
         if (no_improv >= no_improv_break) {
-            std::cout << "no improve: " << iteration << std::endl;
+            std::cout << "no improve: " << iteration << "\n";
 
             return std::get<0>(result[0]);
         }
