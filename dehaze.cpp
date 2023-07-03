@@ -35,6 +35,7 @@ cv::Mat dehaze(const cv::Mat& img, int patch_size, int max_iter, double eps, int
 
 	cv::threshold(res, res, 0.0, 0.0, cv::THRESH_TOZERO);
 	cv::threshold(res, res, 1.0, 1.0, cv::THRESH_TRUNC);
+    res.convertTo(res, CV_8UC3, 255.);
 
 	return res;
 }

@@ -94,8 +94,7 @@ void cumsum(const cv::Mat& img, cv::Mat& out, int dim) {
 // Приводит bgr значения к диапазону[0, 1]
 cv::Mat toDuble(const cv::Mat& img) {
 	cv::Mat temp;
-	img.convertTo(temp, CV_64F);
-	temp /= 255;
+    img.convertTo(temp, CV_64F, 1. / 255.);
 	return temp;
 }
 
