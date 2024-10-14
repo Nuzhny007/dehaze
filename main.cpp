@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     {
         "{@1          |images/hazy_scene.png  | picture file |}"
         "{path_size   |16                     | path_size |}"
-        "{max_iter    |10e5                   | max_iter |}"
+        "{max_iter    |200                    | max_iter |}"
         "{eps         |10e-7                  | eps |}"
         "{lamda       |4                      | lamda |}"
         "{tmin        |0.2                    | tmin |}"
@@ -45,7 +45,11 @@ int main(int argc, char** argv)
         std::cout << "Image readed successfully: " << srcFile << std::endl;
     }
 
+    auto startTime = std::chrono::high_resolution_clock::now();
     cv::Mat dehazed = dehaze(img, path_size, max_iter, eps, lamda, tmin, dp, log);
+    auto stopTime = std::chrono::high_resolution_clock::now();
+    auto workTime = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
+    std::cout << "work time = " << workTime.count() << std::endl;
 
     if (show)
     {
@@ -55,5 +59,5 @@ int main(int argc, char** argv)
     }
     if (!resFile.empty())
         cv::imwrite(resFile, dehazed);
-	return 0;
+    return 0;
 }

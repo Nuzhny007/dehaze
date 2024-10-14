@@ -37,8 +37,9 @@ template<int dim> using Vector = cv::Vec<double, dim>;
 
 
 template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func, cv::Vec<double, dim> x_start, double step = 0.1,
-    double no_improve_thr = 10e-6, int no_improv_break = 10, int max_iter = 200, double alpha = 1, double gamma = 2,
-    double rho = -0.5, double sigma = 0.5, bool log = false) {
+                                                                          double no_improve_thr = 10e-6, int no_improv_break = 10, int max_iter = 200, double alpha = 1, double gamma = 2,
+                                                                          double rho = -0.5, double sigma = 0.5, bool log = false)
+{
     double best, prev_best = func(x_start);
     int no_improv = 0;
     std::vector<Tuple<dim>> result;
@@ -51,43 +52,49 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         result.push_back({ x, func(x) });
     }
 
-    int iteration = 0;
-    while (true) {
+    for (int iteration = 0;; ++iteration)
+    {
         // order
-        std::sort(result.begin(), result.end(), [](const Tuple<dim>& a, const Tuple<dim>& b) -> bool {
+        std::sort(result.begin(), result.end(), [](const Tuple<dim>& a, const Tuple<dim>& b) -> bool
+        {
             return (std::get<1>(a) < std::get<1>(b));
-            });
+        });
 
         best = std::get<1>(result[0]);
 
         // break after max_iter
-        if (max_iter && iteration >= max_iter) {
+        if (max_iter && iteration >= max_iter)
+        {
             std::cout << "max_iter: " << iteration << std::endl;
             return std::get<0>(result[0]);
         }
 
-        iteration++;
-
         //break after no_improv_break iterations with no improvement
-        if (log) std::cout << "... best so far:  " << best << std::endl;
+        if (log)
+            std::cout << "... best so far:  " << best << std::endl;
 
-        if (best < (prev_best - no_improve_thr)) {
+        if (best < (prev_best - no_improve_thr))
+        {
             no_improv = 0;
             prev_best = best;
         }
-        else {
+        else
+        {
             no_improv++;
         }
 
-        if (no_improv >= no_improv_break) {
-            std::cout << "no improve: " << iteration << "\n";
+        if (no_improv >= no_improv_break)
+        {
+            if (log)
+                std::cout << "no improve: " << iteration << " (" << no_improv_break << ")\n";
 
             return std::get<0>(result[0]);
         }
 
         //centroid
         Vector<dim> centroid_pt = Vector<dim>::all(0);
-        for (auto it_pt = result.begin(); it_pt != (result.end() - 1); it_pt++) {
+        for (auto it_pt = result.begin(); it_pt != (result.end() - 1); it_pt++)
+        {
             centroid_pt += std::get<0>(*it_pt);
         }
 
@@ -98,37 +105,35 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         reflection_pt += alpha * (centroid_pt - std::get<0>(result[result.size() - 1]));
         double reflection_score = func(reflection_pt);
 
-        if ((std::get<1>(result[0]) <= reflection_score) && (reflection_score < std::get<1>(result[result.size() - 2]))) {
+        if ((std::get<1>(result[0]) <= reflection_score) && (reflection_score < std::get<1>(result[result.size() - 2])))
+        {
             result.pop_back();
-            result.push_back(std::make_tuple(reflection_pt, reflection_score));
+            result.emplace_back(reflection_pt, reflection_score);
             continue;
         }
 
         // expansion
-        if (reflection_score < std::get<1>(result[0])) {
+        if (reflection_score < std::get<1>(result[0]))
+        {
             Vector<dim> expansion_pt(centroid_pt);
             expansion_pt += gamma * (centroid_pt - std::get<0>(result[result.size() - 1]));
             double expansion_score = func(expansion_pt);
-            if (expansion_score < reflection_score) {
-                result.pop_back();
-                result.push_back({ expansion_pt, expansion_score });
-                continue;
 
-            }
-            else {
-                result.pop_back();
-                result.push_back({ reflection_pt, reflection_score });
-                continue;
-
-            }
+            result.pop_back();
+            if (expansion_score < reflection_score)
+                result.emplace_back(expansion_pt, expansion_score);
+            else
+                result.emplace_back(reflection_pt, reflection_score);
+            continue;
         }
         // Contraction
         Vector<dim> contraction_pt(centroid_pt);
         contraction_pt += rho * (centroid_pt - std::get<0>(result[result.size() - 1]));
         double contraction_score = func(contraction_pt);
-        if (contraction_score < std::get<1>(result[result.size() - 1])) {
+        if (contraction_score < std::get<1>(result[result.size() - 1]))
+        {
             result.pop_back();
-            result.push_back({ contraction_pt, contraction_score });
+            result.emplace_back(contraction_pt, contraction_score);
             continue;
         }
 
@@ -136,11 +141,12 @@ template <typename T, int dim> cv::Vec<double, dim> Nelder_Mead_Optimizer(T func
         auto pt_1 = std::get<0>(result[0]);
         std::vector<Tuple<dim>> reduct_result;
 
-        for (auto it_pt = result.begin(); it_pt != result.end(); it_pt++) {
+        for (auto it_pt = result.begin(); it_pt != result.end(); it_pt++)
+        {
             Vector<dim> new_pt(pt_1);
             new_pt += sigma * (std::get<0>(*it_pt) - pt_1);
             double new_score = func(new_pt);
-            reduct_result.push_back({ new_pt, new_score });
+            reduct_result.emplace_back(new_pt, new_score);
         }
 
         result.clear();

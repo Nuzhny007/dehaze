@@ -81,10 +81,10 @@ void cumsum(const cv::Mat& img, cv::Mat& out, int dim) {
 		}
 	}
 	else if (dim == 2) {
-		img.colRange(0, 1).copyTo(out.colRange(0, 1));
-		for (int i = 0; i < img.rows; i++) {
-			for (int j = 1; j < img.cols; j++) {
-				out.at<double>(i, j) = out.at<double>(i, j - 1) + img.at<double>(i, j);
+        img.colRange(0, 1).copyTo(out.colRange(0, 1));
+        for (int i = 0; i < img.rows; i++) {
+            for (int j = 1; j < img.cols; j++) {
+                out.at<double>(i, j) = out.at<double>(i, j - 1) + img.at<double>(i, j);
 			}
 		}
 	}
@@ -95,7 +95,7 @@ void cumsum(const cv::Mat& img, cv::Mat& out, int dim) {
 cv::Mat toDuble(const cv::Mat& img) {
 	cv::Mat temp;
     img.convertTo(temp, CV_64F, 1. / 255.);
-	return temp;
+    return temp;
 }
 
 
